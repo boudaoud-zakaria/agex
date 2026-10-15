@@ -1,5 +1,18 @@
+import { appendFile, mkdir } from 'node:fs/promises';
+import path from 'node:path';
 import { NextResponse } from 'next/server';
 import { inquiryType, validateInquiry, type Inquiry } from '@/lib/contact';
+
+export const runtime = 'nodejs';
+
+// Submissions are appended as JSON lines here (a Docker volume in production).
+const DATA_DIR = process.env.DATA_DIR || path.join(process.cwd(), 'data');
+const SUBMISSIONS_FILE = path.join(DATA_DIR, 'submissions.jsonl');
+
+async function storeSubmission(record: object) {
+  await mkdir(DATA_DIR, { recursive: true });
+  await appendFile(SUBMISSIONS_FILE, JSON.stringify(record) + '\n', { encoding: 'utf8', mode: 0o600 });
+}
 
 // Best-effort per-instance rate limit (5 requests / 10 minutes / IP).
 // Use a shared store (e.g. Redis/KV) or your platform's WAF for production-grade limiting.
@@ -49,19 +62,33 @@ export async function POST(req: Request) {
     received_at: new Date().toISOString(),
   };
 
+  // 1) Persist to disk (durable record, survives redeploys via the data volume)
+  let stored = false;
+  try {
+    await storeSubmission(inquiry);
+    stored = true;
+  } catch (err) {
+    console.error('[contact] could not write submission to disk:', err);
+  }
+
+  // 2) Forward to CRM / email webhook when configured
   const hook = process.env.CONTACT_WEBHOOK_URL;
+  let delivered = false;
   if (hook) {
     try {
       const res = await fetch(hook, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(inquiry) });
       if (!res.ok) throw new Error(`Webhook responded ${res.status}`);
+      delivered = true;
     } catch (err) {
-      console.error('[contact] delivery failed:', err);
-      return NextResponse.json({ ok: false, error: 'We couldn’t send your inquiry. Please try again in a moment.' }, { status: 502 });
+      console.error('[contact] webhook delivery failed:', err);
     }
-  } else {
-    // Not configured: log routing metadata only (no personal data).
-    console.warn(`[contact] CONTACT_WEBHOOK_URL not set — inquiry NOT delivered (type=${inquiry.inquiry_type}, market=${inquiry.market}).`);
   }
 
+  // Routing metadata only in logs (no personal data)
+  console.info(`[contact] inquiry type=${inquiry.inquiry_type} market=${inquiry.market} stored=${stored} webhook=${hook ? delivered : 'not-configured'}`);
+
+  if (!stored && !delivered) {
+    return NextResponse.json({ ok: false, error: 'We couldn’t send your inquiry. Please try again in a moment.' }, { status: 502 });
+  }
   return NextResponse.json({ ok: true });
 }

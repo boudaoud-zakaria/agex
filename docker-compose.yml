@@ -1,0 +1,23 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://agextech.com}
+    container_name: agex-website
+    restart: unless-stopped
+    ports:
+      - "3000"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - submissions_data:/app/data
+      - uploads_data:/app/public/uploads
+
+
+volumes:
+  submissions_data:
+  uploads_data:

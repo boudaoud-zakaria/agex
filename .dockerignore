@@ -1,0 +1,21 @@
+# Dependencies & build output (rebuilt inside the image)
+node_modules
+.next
+out
+next-env.d.ts
+*.tsbuildinfo
+
+# Secrets & runtime data never go into the image
+.env
+.env*.local
+data
+
+# Repo / tooling
+.git
+.gitignore
+.dockerignore
+Dockerfile
+docker-compose*.yml
+*.md
+npm-debug.log*
+.DS_Store
