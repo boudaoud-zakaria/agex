@@ -11,6 +11,7 @@ type Status = 'idle' | 'sending' | 'sent';
 const PRESET_MESSAGES: Record<string, string> = {
   demo: 'I’d like to see the AGEX platform in action.',
   careers: 'I’m interested in career opportunities at AGEX.',
+  privacy: 'Privacy / Data Protection Request: ',
 };
 
 function readForm(form: HTMLFormElement, kind: InquiryKind): Inquiry {
@@ -214,7 +215,7 @@ export default function InquiryForm({ kind = 'customer', countries }: { kind?: I
           <label className="check">
             <input type="checkbox" name="consent" value="yes" required {...fp('consent')} />
             <span className="box" aria-hidden="true" />
-            <span>I agree to AGEX TECH processing my details to respond to this inquiry, as described in the <Link href="/legal#privacy">Privacy Policy</Link>.{req}</span>
+            <span>I agree to AGEX TECH processing my details to respond to this inquiry, as described in the <Link href="/privacy" target="_blank" rel="noopener">Privacy Policy<span className="sr-only"> (opens in a new tab)</span></Link>.{req}</span>
           </label>
           {err('consent')}
         </>
@@ -226,7 +227,7 @@ export default function InquiryForm({ kind = 'customer', countries }: { kind?: I
         </button>
         <p className="req">* Required fields</p>
       </div>
-      {!investor && <p className="form-privacy">We use your details only to respond to your inquiry. See our <Link href="/legal#privacy">Privacy Policy</Link>.</p>}
+      {!investor && <p className="form-privacy">We use your details only to respond to your inquiry. See our <Link href="/privacy" target="_blank" rel="noopener">Privacy Policy<span className="sr-only"> (opens in a new tab)</span></Link>.</p>}
     </form>
   );
 }

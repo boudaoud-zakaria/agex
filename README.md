@@ -42,7 +42,7 @@ Volumes: `submissions_data` → `/app/data` (contact submissions), `uploads_data
 - `/`: Hero → Traction & deployments map → Global & local → The AGEX engine (architecture) → Explore the engine → Platform in action → Solutions → How it works → footer CTA
 - `/solutions/ride-hailing`, `/solutions/delivery`, `/solutions/fleet`: solution pages (copy in `lib/solutions.ts`)
 - `/deployments`: markets map and traction · `/about`: About AGEX, purpose, approach, the AGEX advantage
-- `/contact` (customers) and `/contact/investors` (investors & partners); `/legal` (Privacy, Terms, Cookies placeholders)
+- `/contact` (customers) and `/contact/investors` (investors & partners); `/privacy` and `/terms` (copy in `lib/legal.ts`)
 
 ## Brand film
 - `public/media/agex-film.mp4` (10 s, 1280×720, streaming-ready), poster `agex-film-poster.jpg`.
@@ -56,7 +56,7 @@ Volumes: `submissions_data` → `/app/data` (contact submissions), `uploads_data
 
 ## Content to supply before launch
 - **Platform in action** shows interface recreations based on the approved reference (`components/platform/Screens.tsx`), with illustrative sample values (rides, AED amounts, names). To use real screenshots instead, add files to `public/screens/` and set `src` per screen in `lib/products.ts`.
-- Social profile URLs (`lib/site.ts`), legal copy (`app/legal/page.tsx`), and sign-off on the metrics and market statuses (`components/home/Proof.tsx`).
+- Social profile URLs (`lib/site.ts`), Singapore legal sign-off on the Privacy Policy and Terms of Use (`lib/legal.ts`), and sign-off on the metrics and market statuses (`components/home/Proof.tsx`).
 
 ## Structure
 - `app/`: routes, `api/contact/route.ts` (validation for both inquiry types, honeypot, rate limit, disk + webhook), `robots.ts`, `sitemap.ts`, `globals.css`

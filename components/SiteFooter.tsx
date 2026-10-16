@@ -70,9 +70,9 @@ export default function SiteFooter({ cta = true }: { cta?: boolean }) {
         <div className="foot-base">
           <span>© {year} {LEGAL_NAME} All rights reserved.</span>
           <span className="foot-legal">
-            <Link href="/legal#privacy">Privacy Policy</Link>
-            <Link href="/legal#terms">Terms of Service</Link>
-            <Link href="/legal#cookies">Cookies</Link>
+            <Link href="/privacy">Privacy Policy</Link>
+            <Link href="/terms">Terms of Use</Link>
+            <Link href="/privacy#cookies">Cookies</Link>
           </span>
         </div>
       </div>

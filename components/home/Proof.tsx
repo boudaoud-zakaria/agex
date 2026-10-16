@@ -34,7 +34,7 @@ export default function Proof() {
           {MARKETS.map(m => (
             <div key={m.name} className="market reveal-card">
               <span className={`lg lg-${m.cls}`} />
-              <div><h3>{m.name}</h3><p className="label">{m.meta}</p></div>
+              <div><h3>{m.name}</h3></div>
             </div>
           ))}
         </div>

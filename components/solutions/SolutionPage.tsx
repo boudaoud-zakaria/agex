@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import BackButton from '@/components/BackButton';
 import Icon from '@/components/Icon';
 import SplitHeading from '@/components/SplitHeading';
 import IsoTown from '@/components/visuals/IsoTown';
@@ -13,6 +14,7 @@ export default function SolutionPage({ s }: { s: Solution }) {
       {/* 1 · Hero */}
       <section className="sp-hero section-light" data-theme="light" data-label={s.name}>
         <div className="sp-art sp-art-right"><IsoTown preset={s.scene} /></div>
+        <div className="wrap page-back"><BackButton fallback="/#solutions" className="reveal" /></div>
         <div className="wrap sp-inner">
           <div className="sp-copy">
             <p className="eyebrow eyebrow-line reveal">{s.hero.label}</p>

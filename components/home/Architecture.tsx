@@ -106,7 +106,8 @@ export default function Architecture() {
 
     const fontsReady = document.fonts?.ready ?? Promise.resolve();
     ctx.onCleanup(() => { stopPulses(); wires.innerHTML = ''; });
-    if (ctx.reduce) { fontsReady.then(buildWires); return; }
+    // reduced motion, and small screens: show the final layer design with no animation
+    if (ctx.reduce || !desktop) { fontsReady.then(buildWires); return; }
 
     // ---- idle motion once assembled: floating layers + gold highlight sweep
     const floats = slabs.map((sl, i) => ctx.animate(sl, { translateY: [0, -5 - (2 - i) * 1.5], duration: 2800, delay: i * 420, loop: true, alternate: true, ease: 'inOutSine', autoplay: false }));
@@ -122,16 +123,6 @@ export default function Architecture() {
       idle.forEach(a => (on ? a.play() : a.pause()));
       if (on) startPulses(); else stopPulses();
     };
-
-    if (!desktop) {
-      // small screens: simple staged reveal, no pin
-      ctx.set([...cards, ...slabs, ...labels], { opacity: 0, translateY: 24 });
-      ctx.onEnter(root, () => {
-        ctx.animate([...cards, ...labels.flatMap((l, i) => [l, slabs[i]])], { opacity: [0, 1], translateY: [24, 0], duration: 800, delay: stagger(90), ease: 'outExpo', onComplete: () => setIdle(true) });
-      }, 0.1);
-      ctx.whenVisible(root, () => { if (idling) idle.forEach(a => a.play()); }, () => idle.forEach(a => a.pause()));
-      return;
-    }
 
     // ---- desktop: scroll-scrubbed assembly (isometric plates → separated → flat slabs → wires)
     let tl: any = null;

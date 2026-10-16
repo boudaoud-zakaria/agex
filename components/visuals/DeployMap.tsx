@@ -77,7 +77,7 @@ export default function DeployMap() {
             <div key={m.k} className={`mk ${m.cls} ${m.dir}`} style={{ left: `${((c + 0.5) / MAP.cols) * 100}%`, top: `${((r + 0.5) / MAP.rows) * 100}%` }}>
               {m.cls === 'live' && <span className="pulse" />}
               <span className="core" />
-              <span className="lab">{m.name}<small>{m.sub}</small></span>
+              <span className="lab">{m.name}</span>
             </div>
           );
         })}

@@ -3,6 +3,7 @@ import { Figtree, JetBrains_Mono } from 'next/font/google';
 import LogoSprite from '@/components/LogoSprite';
 import ReadyFlag from '@/components/ReadyFlag';
 import Reveals from '@/components/Reveals';
+import RouteTrail from '@/components/RouteTrail';
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from '@/lib/site';
 import './globals.css';
 
@@ -44,6 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a className="skip-link" href="#main">Skip to content</a>
         {children}
         <Reveals />
+        <RouteTrail />
         <ReadyFlag />
       </body>
     </html>

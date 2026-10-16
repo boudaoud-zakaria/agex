@@ -5,6 +5,10 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   allowedDevOrigins: ['127.0.0.1'],
+  async redirects() {
+    // the old combined placeholder page
+    return [{ source: '/legal', destination: '/privacy', permanent: false }];
+  },
   async headers() {
     return [
       {
