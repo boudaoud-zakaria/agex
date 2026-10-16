@@ -6,7 +6,7 @@ import { MAP } from '@/lib/map-data';
 import { MARKERS } from '@/lib/markets';
 import { $$, clamp01, useAnime } from '@/lib/motion';
 
-/** Dot-matrix deployments map (canvas) with market markers and legend. */
+/** Dot-matrix deployments map (canvas) with market markers. */
 export default function DeployMap() {
   const mapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -83,11 +83,6 @@ export default function DeployMap() {
         })}
       </div>
     </div>
-    <ul className="legend label" aria-label="Map legend">
-      <li><span className="lg lg-live" />Live</li>
-      <li><span className="lg lg-dev" />Developing</li>
-      <li><span className="lg lg-plan" />In discussion</li>
-    </ul>
   </div>
   );
 }
