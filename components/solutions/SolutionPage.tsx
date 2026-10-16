@@ -38,7 +38,8 @@ export default function SolutionPage({ s }: { s: Solution }) {
         </div>
       </section>
 
-      {/* 3 · Guidance */}
+      {/* 3 · Guidance (not on every page) */}
+      {s.guidance && (
       <section className="sp-guide section-light" data-theme="light" data-label={s.guidance.label}>
         <div className="wrap sp-guide-grid">
           <div className="sp-copy">
@@ -58,6 +59,7 @@ export default function SolutionPage({ s }: { s: Solution }) {
           </div>
         </div>
       </section>
+      )}
 
       {/* 4 · Approach */}
       <section className="sp-approach section-light alt" data-theme="light" data-label={s.approach.label}>
@@ -65,6 +67,12 @@ export default function SolutionPage({ s }: { s: Solution }) {
         <div className="wrap sp-inner">
           <p className="eyebrow eyebrow-line reveal">{s.approach.label}</p>
           <SplitHeading className="display sp-h2" lines={s.approach.title} />
+          {s.approach.intro?.map(p => <p key={p} className="sp-p reveal">{p}</p>)}
+          {s.approach.questions && (
+            <ul className="sp-questions sp-questions-inline reveal-stagger">
+              {s.approach.questions.map(q => <li key={q.q}><span className="sp-q-ico"><Icon name={q.icon} size={20} /></span>{q.q}</li>)}
+            </ul>
+          )}
           <p className="sp-p sp-sub reveal">{s.approach.sub}</p>
           <ul className="pillars">
             {s.approach.pillars.map(p => (

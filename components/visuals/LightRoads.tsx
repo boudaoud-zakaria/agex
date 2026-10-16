@@ -4,13 +4,14 @@ import { useId, useRef } from 'react';
 import { stagger, svg as asvg } from 'animejs';
 import { $$, mk, useAnime } from '@/lib/motion';
 
-type Variant = 'band' | 'corner' | 'wide';
+type Variant = 'band' | 'corner' | 'wide' | 'highway';
 
 // Lane geometry per variant (viewBox 800×400)
 const LANES: Record<Variant, (i: number) => string> = {
   band: i => `M${140 + i * 26} 420 C ${360 + i * 10} ${250 - i * 6}, ${520 + i * 6} ${110 + i * 8}, 860 ${70 + i * 18}`,
   corner: i => `M-40 ${330 - i * 16} C 160 ${300 - i * 12}, 380 ${300 + i * 10}, ${560 + i * 22} 430`,
   wide: i => `M-40 ${360 - i * 10} C 220 ${330 - i * 14}, 520 ${150 + i * 10}, 860 ${110 + i * 16}`,
+  highway: i => `M-60 ${420 - i * 9} C 160 ${360 - i * 10}, 420 ${250 - i * 6}, 860 ${150 + i * 7}`,
 };
 
 /** Curved lanes with travelling lights — the monochrome take on the reference's light-streak roads. */
@@ -56,6 +57,8 @@ export default function LightRoads({ variant = 'band', lanes = 6, className = ''
         </filter>
       </defs>
       {d.map((p, i) => <path key={`b${i}`} className="lr-base" d={p} pathLength={1000} />)}
+      {variant === 'highway' && <path className="lr-edge" d={d[0]} />}
+      {variant === 'highway' && <path className="lr-center" d={d[Math.floor(lanes / 2)]} />}
       <g filter={`url(#${fid})`}>
         {d.map((p, i) => (
           <path key={`l${i}`} className="lr-light" d={p} pathLength={1000}

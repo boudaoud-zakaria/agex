@@ -186,3 +186,16 @@ export function buildDial(host: HTMLElement, ctx: MotionCtx, { progress = false 
   ctx.onCleanup(() => { host.innerHTML = ''; });
   return { svg: s, arcs, ticks, dots, stage, prog, idle };
 }
+
+/**
+ * Run `fn` once the first-visit film intro has finished (immediately when there is none).
+ * See FilmPlayer + the boot script in app/layout.tsx.
+ */
+export function afterIntro(ctx: MotionCtx, fn: () => void) {
+  const pending = document.documentElement.classList.contains('intro-pending')
+    && !(window as unknown as { __agexIntroDone?: boolean }).__agexIntroDone;
+  if (!pending) { fn(); return; }
+  const h = () => fn();
+  window.addEventListener('agex:intro-done', h, { once: true });
+  ctx.onCleanup(() => window.removeEventListener('agex:intro-done', h));
+}

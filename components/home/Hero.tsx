@@ -6,7 +6,8 @@ import { stagger } from 'animejs';
 import Icon from '@/components/Icon';
 import SplitHeading from '@/components/SplitHeading';
 import HeroEngine from '@/components/visuals/HeroEngine';
-import { $, $$, useAnime } from '@/lib/motion';
+import { $, $$, afterIntro, useAnime } from '@/lib/motion';
+import { FILM_OPEN_EVENT } from '@/components/FilmPlayer';
 
 const VALUES = [
   { icon: 'layers', title: 'Multi-vertical platform', text: 'Ride-hailing, delivery and fleet.' },
@@ -35,7 +36,7 @@ export default function Hero() {
         .add(intro, { opacity: [0, 1], translateY: [18, 0], duration: 1000, delay: stagger(90) }, 450)
         .add(values, { opacity: [0, 1], translateY: [14, 0], duration: 900, delay: stagger(90) }, 900);
     };
-    if (document.fonts?.ready) document.fonts.ready.then(run); else run();
+    afterIntro(ctx, () => { if (document.fonts?.ready) document.fonts.ready.then(run); else run(); });
     return () => {
       cancelled = true;
       if (header) { header.style.opacity = ''; header.style.transform = ''; }
@@ -55,6 +56,10 @@ export default function Hero() {
             <Link className="btn btn-solid" href="/contact">Start your mobility business <span aria-hidden="true">→</span></Link>
             <a className="btn btn-ghost" href="#engine">Explore the engine <span aria-hidden="true">↓</span></a>
           </div>
+          <button type="button" className="film-cta" data-intro onClick={() => window.dispatchEvent(new Event(FILM_OPEN_EVENT))}>
+            <span className="film-cta-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6.5v11l9-5.5-9-5.5Z" /></svg></span>
+            <span><b>Watch the AGEX film</b><span>00:10 · Brand film</span></span>
+          </button>
         </div>
         <div className="hero-visual" data-intro>
           <HeroEngine />

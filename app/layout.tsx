@@ -26,8 +26,12 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { themeColor: '#0a0a0a', width: 'device-width', initialScale: 1 };
 
-// Adds .js before paint so intro states apply without a flash; reveals everything if the app never hydrates.
-const bootScript = `document.documentElement.classList.add('js');setTimeout(function(){if(!window.__agexReady)document.documentElement.classList.remove('js')},4000);`;
+// Runs before paint:
+// - adds .js so intro states apply without a flash (removed again if the app never hydrates);
+// - on a first desktop visit to the homepage, marks the cinematic film intro as pending (see FilmIntro).
+const bootScript = `(function(){var d=document.documentElement;d.classList.add('js');
+try{if(location.pathname==='/'&&!localStorage.getItem('agex.filmSeen')&&matchMedia('(min-width: 861px)').matches&&!matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('intro-pending')}catch(e){}
+setTimeout(function(){if(!window.__agexReady){d.classList.remove('js');d.classList.remove('intro-pending')}},4000)})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

@@ -7,9 +7,9 @@ import { fb, mk, useAnime } from '@/lib/motion';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const LABELS = [
-  { p: [290, 175], e: [150, 95], end: [36, 95], t: 'Your brand', anchor: 'start' },
-  { p: [432, 282], e: [560, 205], end: [632, 205], t: 'Your market', anchor: 'end' },
-  { p: [300, 402], e: [178, 520], end: [36, 520], t: 'Your operations', anchor: 'start' },
+  { p: [290, 175], e: [150, 95], end: [36, 95], t: 'Your brand', d: ['Own and grow', 'your local brand.'], anchor: 'start' },
+  { p: [432, 282], e: [592, 205], end: [694, 205], t: 'Your market', d: ['Launch in your city,', 'country or region.'], anchor: 'end' },
+  { p: [300, 402], e: [178, 520], end: [36, 520], t: 'Your operations', d: ['Run your business and', 'serve your customers.'], anchor: 'start' },
 ];
 
 export default function Idea() {
@@ -37,6 +37,7 @@ export default function Idea() {
       pts.push(mk('circle', { class: 'pt', cx: l.p[0], cy: l.p[1], r: 4, ...fb }, s));
       const g = mk('g', {}, s);
       mk('text', { class: 'lbl', x: l.end[0], y: l.end[1] - 12, 'text-anchor': l.anchor }, g).textContent = l.t;
+      l.d.forEach((line, k) => { mk('text', { class: 'lbl-sub', x: l.end[0], y: l.end[1] + 22 + k * 18, 'text-anchor': l.anchor }, g).textContent = line; });
       texts.push(g);
     });
     if (ctx.reduce) return;
@@ -63,7 +64,7 @@ export default function Idea() {
     <section className="idea section-light" id="idea" data-theme="light" data-label="Global & local">
       <div className="wrap idea-grid">
         <div className="idea-copy">
-          <p className="eyebrow reveal">02 <span className="sep">/</span> Global technology. Local business.</p>
+          <p className="eyebrow reveal">Global technology. Local business.</p>
           <SplitHeading className="display" lines={[{ text: 'Mobility is global.', tone: 'muted' }, { text: 'Winning is local.' }]} />
           <div className="idea-support">
             <p className="statement reveal-stagger"><span>Your brand.</span> <span>Your market.</span> <span>Our engine.</span></p>
@@ -73,7 +74,7 @@ export default function Idea() {
           </div>
         </div>
         <div className="idea-visual">
-          <svg ref={globeRef} className="globe" viewBox="0 0 640 600" aria-hidden="true" />
+          <svg ref={globeRef} className="globe" viewBox="0 0 700 600" aria-hidden="true" />
         </div>
       </div>
     </section>

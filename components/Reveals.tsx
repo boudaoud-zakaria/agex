@@ -33,6 +33,9 @@ export default function Reveals() {
       if (icons.length) {
         ctx.animate(svg.createDrawable(icons), { draw: ['0 0', '0 1'], duration: 1400, delay: stagger(40, { start: 200 }), ease: 'inOutQuad' });
         ctx.animate($$('.sol-icon .dash', p), { opacity: [0, 0.55], duration: 800, delay: 900 });
+        // line art hands over to the rendered visual
+        ctx.animate($$('.sol-render', p), { opacity: [0, 1], translateY: [8, 0], duration: 1100, delay: stagger(160, { start: 1700 }), ease: 'outQuad' });
+        ctx.animate($$('.sol-icon', p), { opacity: [1, 0], duration: 900, delay: stagger(160, { start: 1900 }), ease: 'inOutQuad' });
       }
     }, 0.12));
 

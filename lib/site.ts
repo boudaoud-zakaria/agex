@@ -28,7 +28,7 @@ export const SOCIALS = [
 export const NAV = [
   { key: 'engine', label: 'Engine', href: '/#engine' },
   { key: 'solutions', label: 'Solutions', href: '/#solutions' },
-  { key: 'deployments', label: 'Deployments', href: '/deployments' },
+  { key: 'deployments', label: 'Deployments', href: '/#deployments' },
   { key: 'about', label: 'About', href: '/about' },
   { key: 'contact', label: 'Contact', href: '/contact' },
 ] as const;

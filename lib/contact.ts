@@ -43,7 +43,6 @@ export function validateInquiry(d: Inquiry): FieldErrors {
   else if (str(d.country).length > 80) e.country = 'Please select a country from the list.';
   if (!str(d.message)) e.message = kind === 'investor' ? 'Please tell us about your interest.' : 'Please tell us about your opportunity.';
   else if (str(d.message).length > 5000) e.message = 'Please keep your message under 5,000 characters.';
-  if (d.consent !== true) e.consent = 'Please agree to the privacy terms so we can respond.';
 
   if (kind === 'customer') {
     if (str(d.company).length > 160) e.company = 'Please keep this under 160 characters.';
@@ -52,6 +51,7 @@ export function validateInquiry(d: Inquiry): FieldErrors {
     if (!str(d.stage)) e.stage = 'Please tell us where you are today.';
     else if (!inList(str(d.stage), STAGES)) e.stage = 'Please choose one of the options.';
   } else {
+    if (d.consent !== true) e.consent = 'Please agree to the privacy terms so we can respond.';
     if (!str(d.organization)) e.organization = 'Please enter your organization.';
     else if (str(d.organization).length > 160) e.organization = 'Please keep this under 160 characters.';
     if (!str(d.interest)) e.interest = 'Please choose your type of interest.';

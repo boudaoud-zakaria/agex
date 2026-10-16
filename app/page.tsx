@@ -1,8 +1,10 @@
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
+import FilmPlayer from '@/components/FilmPlayer';
 import Hero from '@/components/home/Hero';
+import Traction from '@/components/home/Traction';
 import Idea from '@/components/home/Idea';
-import EngineStack from '@/components/home/EngineStack';
+import Architecture from '@/components/home/Architecture';
 import EngineLayers from '@/components/home/EngineLayers';
 import PlatformInAction from '@/components/home/PlatformInAction';
 import Solutions from '@/components/home/Solutions';
@@ -25,11 +27,13 @@ export default function HomePage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
+      <FilmPlayer />
       <SiteHeader home />
       <main id="main">
         <Hero />
+        <Traction />
         <Idea />
-        <EngineStack />
+        <Architecture />
         <EngineLayers />
         <PlatformInAction />
         <Solutions />

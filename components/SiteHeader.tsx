@@ -19,7 +19,7 @@ type Props = {
 };
 
 // Home sections that map onto a nav item
-const SECTION_NAV: Record<string, NavKey> = { engine: 'engine', layers: 'engine', platform: 'engine', solutions: 'solutions' };
+const SECTION_NAV: Record<string, NavKey> = { deployments: 'deployments', engine: 'engine', layers: 'engine', platform: 'engine', solutions: 'solutions' };
 
 export default function SiteHeader({ home = false, adaptive = home, theme = 'dark', current, ctaHref = '/contact', ctaLabel = 'Start your mobility business' }: Props) {
   const headerRef = useRef<HTMLElement>(null);

@@ -25,6 +25,7 @@ export default function InvestorsPage() {
           { icon: 'globe', t: 'Start a conversation', d: 'Our team will get back to you for a follow-up discussion.' },
         ]}
         switchLink={{ href: '/contact', label: 'Building a mobility business?', cta: 'Talk to our team' }}
+        variant="investor"
         art={<GlobeArcs />}
       >
         <InquiryForm kind="investor" countries={countryNames()} />

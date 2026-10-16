@@ -1,23 +1,19 @@
 import type { Metadata } from 'next';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
-import Company from '@/components/home/Company';
-import NextLayer from '@/components/home/NextLayer';
+import AboutPage from '@/components/about/AboutPage';
 
 export const metadata: Metadata = {
   title: 'About',
-  description: 'AGEX TECH develops reusable mobility technology for independent operators and selected AGEX-powered brands.',
+  description: 'AGEX TECH is a Singapore-headquartered mobility technology company powering independent mobility businesses through its proven Intelligent Mobility Engine.',
   alternates: { canonical: '/about' },
 };
 
-export default function AboutPage() {
+export default function Page() {
   return (
     <>
       <SiteHeader adaptive theme="light" current="about" />
-      <main id="main">
-        <Company />
-        <NextLayer />
-      </main>
+      <main id="main"><AboutPage /></main>
       <SiteFooter />
     </>
   );

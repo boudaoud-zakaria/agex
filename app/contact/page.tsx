@@ -26,7 +26,8 @@ export default function ContactPage() {
           { icon: 'gear', t: 'Let’s discuss how AGEX can help you move forward.' },
         ]}
         switchLink={{ href: '/contact/investors', label: 'Investor or strategic partner?', cta: 'Start a partner inquiry' }}
-        art={<LightRoads variant="corner" lanes={6} />}
+        variant="customer"
+        art={<LightRoads variant="highway" lanes={7} />}
       >
         <InquiryForm kind="customer" countries={countryNames()} />
       </ContactLayout>

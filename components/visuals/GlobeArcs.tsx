@@ -7,6 +7,12 @@ import { $$, mk, useAnime } from '@/lib/motion';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const CX = 380, CY = 640, R = 470;
 const CITIES = [[150, 380], [330, 300], [470, 330], [610, 390], [260, 420], [520, 450], [700, 470]];
+// scattered city lights (deterministic)
+const LIGHTS: Array<[number, number, number]> = Array.from({ length: 140 }, (_, i): [number, number, number] => {
+  const a = (i * 137.508 * Math.PI) / 180, rr = Math.sqrt((i + 0.5) / 140) * R * 0.98;
+  const x = CX + Math.cos(a) * rr * 1.05, y = CY + Math.sin(a) * rr * 0.5 - R * 0.45;
+  return [Math.round(x), Math.round(y), i % 7 === 0 ? 1.8 : 1];
+}).filter(([x, y]) => (x - CX) ** 2 + (y - CY) ** 2 < R * R && y > 170);
 const ARCS: Array<[number, number]> = [[0, 1], [1, 2], [2, 3], [1, 5], [4, 2], [3, 6], [0, 4]];
 
 /** Wireframe horizon globe with connection arcs (investor / partner contact). */
@@ -27,6 +33,7 @@ export default function GlobeArcs() {
       const p = mk('circle', { class: 'ga-pulse', r: 2.6 }, dyn);
       loops.push(ctx.animate(p, { ...asvg.createMotionPath(a), opacity: [0, 1, 1, 0], duration: 3000, delay: i * 420, loop: true, ease: 'inOutSine', autoplay: false }));
     });
+    loops.push(ctx.animate($$('.ga-light', s), { opacity: [0.25, 0.9, 0.25], duration: 2600, delay: stagger(40), loop: true, ease: 'inOutSine', autoplay: false }));
     loops.push(ctx.animate($$('.ga-city-glow', s), { scale: [1, 2.4], opacity: [0.7, 0], duration: 2400, delay: stagger(300), loop: true, ease: 'outQuad', autoplay: false }));
     ctx.onEnter(s, () => ctx.animate(draw, { draw: ['0 0', '0 1'], duration: 1600, delay: stagger(140, { start: 400 }), ease: 'inOutQuad' }), 0.05);
     ctx.whenVisible(s, () => loops.forEach(a => a.play()), () => loops.forEach(a => a.pause()));
@@ -50,6 +57,9 @@ export default function GlobeArcs() {
       <g clipPath="url(#ga-clip)" className="ga-wire">
         {[-80, -40, 0, 40, 80, 130, 190].map(dx => <ellipse key={`m${dx}`} cx={CX + dx * 0.2} cy={CY} rx={Math.abs(R * Math.sin((dx / 200) * Math.PI / 2)) || 1} ry={R} />)}
         {[0.12, 0.28, 0.46, 0.66].map(k => <ellipse key={`p${k}`} cx={CX} cy={CY - R * (1 - k)} rx={R * Math.sqrt(1 - (1 - k) ** 2) * 1.02} ry={14 + k * 20} />)}
+      </g>
+      <g clipPath="url(#ga-clip)">
+        {LIGHTS.map(([x, y, r], i) => <circle key={i} className="ga-light" cx={x} cy={y} r={r} />)}
       </g>
       <circle cx={CX} cy={CY} r={R} className="ga-rim" />
       {ARCS.map((a, i) => <path key={i} className="ga-arc" d={arcD(a)} />)}

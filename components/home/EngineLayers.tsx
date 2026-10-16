@@ -190,7 +190,7 @@ export default function EngineLayers() {
             <div className="ee-copy">
               {VIEWS.map((v, i) => (
                 <article key={v.key} className={`ee-view${i === 0 ? ' is-active' : ''}`}>
-                  <p className="eyebrow">0{i + 1} <span className="sep">/</span> {v.title}</p>
+                  <p className="eyebrow">Explore the engine</p>
                   <h3 className="ee-title">{v.title}</h3>
                   <p className="ee-text">{v.text}</p>
                   <ul className="ee-caps">

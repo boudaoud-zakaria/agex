@@ -2,6 +2,7 @@ import { appendFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { NextResponse } from 'next/server';
 import { inquiryType, validateInquiry, type Inquiry } from '@/lib/contact';
+import { mailConfigured, sendInquiryEmail } from '@/lib/mailer';
 
 export const runtime = 'nodejs';
 
@@ -61,7 +62,7 @@ export async function POST(req: Request) {
       : { organization: clean(body.organization), interest: clean(body.interest), source: clean(body.source) }),
     country: clean(body.country),
     message: clean(body.message),
-    consent: true,
+    consent: body.consent === true,
     inquiry_type: inquiryType({ ...body, kind }),
     received_at: new Date().toISOString(),
   };
@@ -75,7 +76,18 @@ export async function POST(req: Request) {
     console.error('[contact] could not write submission to disk:', err);
   }
 
-  // 2) Forward to CRM / email webhook when configured
+  // 2) Email the inquiry (Brevo SMTP → CONTACT_TO, default investor@agextech.com)
+  let emailed = false;
+  if (mailConfigured()) {
+    try {
+      await sendInquiryEmail(inquiry);
+      emailed = true;
+    } catch (err) {
+      console.error('[contact] email delivery failed:', err instanceof Error ? err.message : err);
+    }
+  }
+
+  // 3) Optional CRM / webhook forwarding
   const hook = process.env.CONTACT_WEBHOOK_URL;
   let delivered = false;
   if (hook) {
@@ -89,9 +101,9 @@ export async function POST(req: Request) {
   }
 
   // Routing metadata only in logs (no personal data)
-  console.info(`[contact] inquiry type=${inquiry.inquiry_type} country=${inquiry.country} stored=${stored} webhook=${hook ? delivered : 'not-configured'}`);
+  console.info(`[contact] inquiry type=${inquiry.inquiry_type} country=${inquiry.country} stored=${stored} email=${mailConfigured() ? emailed : 'not-configured'} webhook=${hook ? delivered : 'not-configured'}`);
 
-  if (!stored && !delivered) {
+  if (!stored && !emailed && !delivered) {
     return NextResponse.json({ ok: false, error: 'We couldn’t send your inquiry. Please try again in a moment.' }, { status: 502 });
   }
   return NextResponse.json({ ok: true });

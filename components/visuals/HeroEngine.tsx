@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { stagger, svg as asvg } from 'animejs';
 import Icon from '@/components/Icon';
 import { box, iso, loop, pin, plate } from '@/lib/iso';
-import { $$, mk, seeded, useAnime } from '@/lib/motion';
+import { $$, afterIntro, mk, seeded, useAnime } from '@/lib/motion';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const OX = 410, OY = 330;
@@ -130,7 +130,7 @@ export default function HeroEngine() {
       loops.push(ctx.animate($$('.he-pin', s), { translateY: [0, -4, 0], duration: 2600, delay: stagger(500), loop: true, ease: 'inOutSine' }));
     };
 
-    ctx.timeline({ defaults: { ease: 'outExpo' } })
+    afterIntro(ctx, () => ctx.timeline({ defaults: { ease: 'outExpo' } })
       .add(outlineDraw, { draw: ['0 0', '0 1'], duration: 1400, delay: stagger(25), ease: 'inOutQuad' }, 200)
       .add($$('.pl-t, .pl-l, .pl-r', s), { fillOpacity: [0, 1], duration: 800, delay: stagger(12) }, 700)
       .add(roadDraw, { draw: ['0 0', '0 1'], duration: 1000, delay: stagger(150), ease: 'inOutQuad' }, 900)
@@ -140,7 +140,7 @@ export default function HeroEngine() {
       .add($$('.he-pin', s), { opacity: [0, 1], duration: 500, delay: stagger(100) }, 1800)
       .add(vehEls, { opacity: [0, 1], duration: 500 }, 1900)
       .add(cards, { opacity: [0, 1], translateY: [10, 0], duration: 800, delay: stagger(140) }, 1700)
-      .call(startLoops, 1900);
+      .call(startLoops, 1900));
 
     ctx.whenVisible(root, () => loops.forEach(a => a.play()), () => loops.forEach(a => a.pause()), '0px');
   });

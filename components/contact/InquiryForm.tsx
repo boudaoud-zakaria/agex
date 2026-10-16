@@ -209,12 +209,16 @@ export default function InquiryForm({ kind = 'customer', countries }: { kind?: I
         <input id={id('website')} name="website" type="text" tabIndex={-1} autoComplete="off" />
       </div>
 
-      <label className="check">
-        <input type="checkbox" name="consent" value="yes" required {...fp('consent')} />
-        <span className="box" aria-hidden="true" />
-        <span>I agree to AGEX TECH processing my details to respond to this inquiry, as described in the <Link href="/legal#privacy">Privacy Policy</Link>.{req}</span>
-      </label>
-      {err('consent')}
+      {investor && (
+        <>
+          <label className="check">
+            <input type="checkbox" name="consent" value="yes" required {...fp('consent')} />
+            <span className="box" aria-hidden="true" />
+            <span>I agree to AGEX TECH processing my details to respond to this inquiry, as described in the <Link href="/legal#privacy">Privacy Policy</Link>.{req}</span>
+          </label>
+          {err('consent')}
+        </>
+      )}
 
       <div className="form-foot">
         <button className="btn btn-solid btn-lg" type="submit" disabled={status === 'sending'}>
@@ -222,6 +226,7 @@ export default function InquiryForm({ kind = 'customer', countries }: { kind?: I
         </button>
         <p className="req">* Required fields</p>
       </div>
+      {!investor && <p className="form-privacy">We use your details only to respond to your inquiry. See our <Link href="/legal#privacy">Privacy Policy</Link>.</p>}
     </form>
   );
 }

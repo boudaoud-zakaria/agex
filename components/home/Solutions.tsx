@@ -53,7 +53,10 @@ export default function Solutions() {
         <div className="sol-grid">
           {SOLUTIONS.map(s => (
             <article key={s.slug} className="sol reveal-card">
-              <svg className="sol-icon" viewBox="0 0 160 100" aria-hidden="true">{s.art}</svg>
+              <div className={`sol-visual sv-${s.slug}`}>
+                <svg className="sol-icon" viewBox="0 0 160 100" aria-hidden="true">{s.art}</svg>
+                <img className="sol-render" src={`/solutions/${s.slug}.png`} alt="" loading="lazy" />
+              </div>
               <h3>{s.title}</h3>
               <p>{s.text}</p>
               <ul className="checklist">

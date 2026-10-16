@@ -9,8 +9,8 @@ export type Solution = {
   meta: { title: string; description: string };
   hero: { label: string; title: Line[]; body: string[]; emphasis?: string; cta: string };
   opportunity: { label: string; title: Line[]; body: string[]; emphasis: string; after?: string[] };
-  guidance: { label: string; title: Line[]; intro: string[]; questions: Array<{ icon: string; q: string }>; callout: string; calloutSub?: string[] };
-  approach: { label: string; title: Line[]; sub: string; pillars: Array<{ icon: string; t: string; d: string }>; closing?: string };
+  guidance?: { label: string; title: Line[]; intro: string[]; questions: Array<{ icon: string; q: string }>; callout: string; calloutSub?: string[] };
+  approach: { label: string; title: Line[]; intro?: string[]; questions?: Array<{ icon: string; q: string }>; sub: string; pillars: Array<{ icon: string; t: string; d: string }>; closing?: string };
   next: { label: string; title: Line[]; body: string[]; cta: string; note: string };
 };
 
@@ -25,7 +25,7 @@ export const SOLUTIONS: Solution[] = [
         'You know how people move in your city. You see what’s missing, what could work better, and where the opportunities are.',
         'Maybe you already have vehicles, drivers, customers or a transport business. Maybe you have the vision, the connections and the ambition to build something new.',
       ],
-      emphasis: 'What if you could turn what you know, and what you already have, into your own ride-hailing business?',
+      emphasis: 'What if you could turn what you know—and what you already have—into your own ride-hailing business?',
       cta: 'Explore your opportunity',
     },
     opportunity: {
@@ -46,6 +46,7 @@ export const SOLUTIONS: Solution[] = [
         { icon: 'database', q: 'How much could each trip earn?' },
         { icon: 'calculator', q: 'What will it cost to operate?' },
         { icon: 'users', q: 'How do you attract drivers, acquire customers and grow sustainably?' },
+        { icon: 'gear', q: 'What technology do you need?' },
       ],
       callout: 'These are the questions that matter before launching an app. We work through them with you.',
       calloutSub: [
@@ -105,6 +106,7 @@ export const SOLUTIONS: Solution[] = [
         { icon: 'bars', q: 'How should you price deliveries?' },
         { icon: 'database', q: 'What does each order cost?' },
         { icon: 'store', q: 'How do you attract merchants, manage drivers and grow without losing control of your margins?' },
+        { icon: 'gear', q: 'What technology do you need?' },
       ],
       callout: 'We help you work through the business model, unit economics and launch strategy.',
       calloutSub: ['Then we bring the technology: delivery applications, dispatch, tracking, operational tools and ongoing technical services.'],
@@ -152,8 +154,8 @@ export const SOLUTIONS: Solution[] = [
       emphasis: 'You can’t improve what you can’t clearly see.',
       after: ['The opportunity isn’t simply to manage more vehicles. It’s to make every vehicle work smarter for your business.'],
     },
-    guidance: {
-      label: 'Guidance',
+    approach: {
+      label: 'Our approach',
       title: [{ text: 'What if your fleet could', tone: 'muted' }, { text: 'become a stronger business asset?' }],
       intro: ['That’s where AGEX comes in.', 'We help you look at your fleet from a business perspective first.'],
       questions: [
@@ -161,18 +163,14 @@ export const SOLUTIONS: Solution[] = [
         { icon: 'wallet', q: 'Where can you reduce unnecessary costs?' },
         { icon: 'target', q: 'What operating model makes sense as you expand?' },
       ],
-      callout: 'We work with you to understand your operations, identify improvement opportunities and define the right approach.',
-    },
-    approach: {
-      label: 'Our approach',
-      title: [{ text: 'You focus on running the business.', tone: 'muted' }, { text: 'We help you get more from the fleet behind it.' }],
-      sub: 'We bring the technology to connect vehicles, drivers and daily operations through one fleet management platform, supported by our technical services.',
+      sub: 'We work with you to understand your operations, identify improvement opportunities and define the right approach. Then we bring the technology to connect vehicles, drivers and daily operations through one fleet management platform, supported by our technical services.',
       pillars: [
         { icon: 'bars', t: 'Increase utilization.', d: 'Make better use of your existing vehicles and drivers.' },
         { icon: 'database', t: 'Reduce operational costs.', d: 'Identify and remove avoidable costs across your operations.' },
         { icon: 'gear', t: 'Gain operational control.', d: 'Get real-time visibility across vehicles, drivers and daily activity.' },
         { icon: 'growth', t: 'Plan and grow with confidence.', d: 'Build the right operating model as your business expands.' },
       ],
+      closing: 'You focus on running the business. We help you get more from the fleet behind it.',
     },
     next: {
       label: 'The next step',
