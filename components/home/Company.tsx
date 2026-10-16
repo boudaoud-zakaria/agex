@@ -71,11 +71,11 @@ export default function Company() {
   });
 
   return (
-    <section className="company section-light" id="about" data-theme="light" data-label="08 / About">
+    <section className="company section-light" id="about" data-theme="light" data-label="About">
       <div className="wrap">
         <div className="company-grid">
           <div className="company-copy">
-            <p className="eyebrow mono reveal">08 <span className="sep">/</span> Company</p>
+            <p className="eyebrow label reveal">Company</p>
             <SplitHeading className="display" text="Global technology. Local mobility leaders." />
             <p className="lede reveal">
               AGEX TECH develops reusable mobility technology for independent operators and selected AGEX-powered brands. Our model is designed to scale across markets without rebuilding the engine for each launch.
@@ -90,19 +90,19 @@ export default function Company() {
 
         <div className="compare">
           <div className="compare-col">
-            <p className="mono compare-h">The traditional path</p>
+            <p className="label compare-h">The traditional path</p>
             <p className="compare-sub">Build a mobility business from scratch.</p>
             <ul>{TRADITIONAL.map(([b, t]) => <li key={b}><b>{b}</b>{t}</li>)}</ul>
           </div>
           <div className="compare-col is-agex">
-            <p className="mono compare-h">The AGEX advantage</p>
+            <p className="label compare-h">The AGEX advantage</p>
             <p className="compare-sub">Plug in, launch and scale with confidence.</p>
             <ul>{ADVANTAGE.map(([b, t]) => <li key={b}><b>{b}</b>{t}</li>)}</ul>
           </div>
         </div>
         <p className="compare-tag reveal">You build the market. The AGEX engine powers everything underneath.</p>
 
-        <ul className="signals mono reveal-stagger" aria-label="What AGEX owns">
+        <ul className="signals label reveal-stagger" aria-label="What AGEX owns">
           {SIGNALS.map(s => <li key={s}>{s}</li>)}
         </ul>
       </div>

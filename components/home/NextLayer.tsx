@@ -66,29 +66,29 @@ export default function NextLayer() {
   });
 
   return (
-    <section className="next section-dark deep" id="next" data-theme="dark" data-label="07 / Next layer">
+    <section className="next section-dark deep" id="next" data-theme="dark" data-label="The next layer">
       <div className="wrap next-grid">
         <div className="next-copy">
-          <p className="eyebrow mono reveal">07 <span className="sep">/</span> The next layer <span className="tag tag-outline-dark">Roadmap</span></p>
+          <p className="eyebrow label reveal">The next layer <span className="tag tag-outline-dark">Roadmap</span></p>
           <SplitHeading className="display" text="Intelligence built into mobility." />
           <p className="lede reveal">We are advancing toward agentic operations across support, coordination and optimization.</p>
-          <ul className="arrow-list mono reveal-stagger"><li>Support</li><li>Coordination</li><li>Optimization</li></ul>
-          <p className="footnote mono reveal">Roadmap capability. Not live commercial functionality.</p>
+          <ul className="arrow-list label reveal-stagger"><li>Support</li><li>Coordination</li><li>Optimization</li></ul>
+          <p className="footnote label reveal">Roadmap capability. Not live commercial functionality.</p>
         </div>
         <div ref={wrapRef} className="field-wrap">
           <div ref={fieldRef} className="field" aria-hidden="true" />
           <div ref={orbRef} className="orb" aria-hidden="true"><span /></div>
-          <p className="field-hint mono" aria-hidden="true">Drag the agent ↗</p>
+          <p className="field-hint label" aria-hidden="true">Drag the agent ↗</p>
         </div>
       </div>
       <div className="wrap">
         <ol className="phases">
           {PHASES.map(p => (
             <li key={p.t} className="phase reveal-card">
-              <span className="mono phase-n">{p.n}</span>
+              <span className="label phase-n">{p.n}</span>
               <h3>{p.t}</h3>
               <p>{p.d}</p>
-              <span className={`status mono ${p.cls}`}>{p.s}</span>
+              <span className={`status label ${p.cls}`}>{p.s}</span>
             </li>
           ))}
         </ol>

@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { stagger } from 'animejs';
+import Icon from '@/components/Icon';
 import SplitHeading from '@/components/SplitHeading';
 import { MAP } from '@/lib/map-data';
 import { $$, clamp01, useAnime } from '@/lib/motion';
@@ -59,6 +60,10 @@ export default function Proof() {
         const rad = base * (p.t === 2 ? 0.34 : 0.26) * (0.4 + 0.6 * k) * (1 + w * 0.35);
         g.fillStyle = `rgba(245,244,241,${a.toFixed(3)})`;
         g.beginPath(); g.arc((p.c + 0.5) * cw, (p.r + 0.5) * ch, rad, 0, Math.PI * 2); g.fill();
+        if (w > 0.05) { // gold light as the wave passes
+          g.fillStyle = `rgba(240,196,110,${(w * (p.t === 2 ? 0.75 : 0.45)).toFixed(3)})`;
+          g.beginPath(); g.arc((p.c + 0.5) * cw, (p.r + 0.5) * ch, rad, 0, Math.PI * 2); g.fill();
+        }
       }
     };
     const onResize = () => { size(); draw(); };
@@ -80,25 +85,28 @@ export default function Proof() {
   });
 
   return (
-    <section className="proof section-dark" id="deployments" data-theme="dark" data-label="06 / Deployments">
+    <section className="proof section-dark" id="deployments" data-theme="dark" data-label="Deployments">
       <div className="wrap">
         <div className="section-head">
-          <p className="eyebrow mono reveal">06 <span className="sep">/</span> Proof</p>
-          <SplitHeading className="display" text="Built through real operations." />
+          <p className="eyebrow eyebrow-line reveal">Deployments</p>
+          <SplitHeading className="display" lines={[{ text: 'Built through', tone: 'muted' }, { text: 'real operations.' }]} />
         </div>
         <div className="proof-grid">
           <div className="metrics">
             <div className="metric reveal">
-              <p className="metric-num"><span data-count="10000">0</span>+</p>
-              <p className="metric-label">Drivers</p>
-              <p className="metric-note mono">YAY ecosystem · UAE</p>
+              <span className="metric-ico"><Icon name="car" size={22} /></span>
+              <div>
+                <p className="metric-num"><span data-count="520456">0</span>+</p>
+                <p className="metric-label">Completed trips</p>
+              </div>
             </div>
             <div className="metric reveal">
-              <p className="metric-num">~<span data-count="100000">0</span></p>
-              <p className="metric-label">Riders</p>
-              <p className="metric-note mono">YAY ecosystem · UAE</p>
+              <span className="metric-ico"><Icon name="database" size={22} /></span>
+              <div>
+                <p className="metric-num">$<span data-count="16348770">0</span>+</p>
+                <p className="metric-label">Transaction value</p>
+              </div>
             </div>
-            <p className="footnote mono reveal">Ecosystem / brand figures for YAY (UAE), not AGEX platform-wide unique totals.</p>
           </div>
           <div className="map-block">
             <div ref={mapRef} className="map">
@@ -116,7 +124,7 @@ export default function Proof() {
                 })}
               </div>
             </div>
-            <ul className="legend mono" aria-label="Map legend">
+            <ul className="legend label" aria-label="Map legend">
               <li><span className="lg lg-live" />Live</li>
               <li><span className="lg lg-dev" />Developing</li>
               <li><span className="lg lg-plan" />In discussion</li>
@@ -127,7 +135,7 @@ export default function Proof() {
           {MARKETS.map(m => (
             <div key={m.name} className="market reveal-card">
               <span className={`lg lg-${m.cls}`} />
-              <div><h3>{m.name}</h3><p className="mono">{m.meta}</p></div>
+              <div><h3>{m.name}</h3><p className="label">{m.meta}</p></div>
             </div>
           ))}
         </div>

@@ -7,9 +7,9 @@ import { fb, mk, useAnime } from '@/lib/motion';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const LABELS = [
-  { p: [290, 175], e: [150, 95], end: [36, 95], t: 'Your brand', n: '01', anchor: 'start' },
-  { p: [432, 282], e: [560, 205], end: [632, 205], t: 'Your market', n: '02', anchor: 'end' },
-  { p: [300, 402], e: [178, 520], end: [36, 520], t: 'Your customers', n: '03', anchor: 'start' },
+  { p: [290, 175], e: [150, 95], end: [36, 95], t: 'Your brand', anchor: 'start' },
+  { p: [432, 282], e: [560, 205], end: [632, 205], t: 'Your market', anchor: 'end' },
+  { p: [300, 402], e: [178, 520], end: [36, 520], t: 'Your operations', anchor: 'start' },
 ];
 
 export default function Idea() {
@@ -36,8 +36,7 @@ export default function Idea() {
       pts.push(mk('circle', { class: 'pt-ring', cx: l.p[0], cy: l.p[1], r: 9, ...fb }, s));
       pts.push(mk('circle', { class: 'pt', cx: l.p[0], cy: l.p[1], r: 4, ...fb }, s));
       const g = mk('g', {}, s);
-      mk('text', { class: 'lbl', x: l.end[0], y: l.end[1] - 10, 'text-anchor': l.anchor }, g).textContent = l.t;
-      mk('text', { class: 'lbl-sub', x: l.end[0], y: l.end[1] + 20, 'text-anchor': l.anchor }, g).textContent = l.n;
+      mk('text', { class: 'lbl', x: l.end[0], y: l.end[1] - 12, 'text-anchor': l.anchor }, g).textContent = l.t;
       texts.push(g);
     });
     if (ctx.reduce) return;
@@ -45,7 +44,7 @@ export default function Idea() {
     const draws = svg.createDrawable([outline, ...parallels, ...meridians]);
     const leaderDraws = svg.createDrawable(leaders);
     const spin = { t: 0.35 };
-    const spinAnim = ctx.animate(spin, { t: 0.35 + Math.PI, duration: 24000, loop: true, ease: 'linear', autoplay: false, onUpdate: () => setMer(spin.t) });
+    const spinAnim = ctx.animate(spin, { t: 0.35 + Math.PI, duration: 70000, loop: true, ease: 'linear', autoplay: false, onUpdate: () => setMer(spin.t) });
     const ringPulse = ctx.animate(pts.filter((_, i) => i % 2 === 0), { scale: [1, 2.6], opacity: [0.9, 0], duration: 2200, delay: stagger(500), loop: true, ease: 'outQuad', autoplay: false });
     ctx.set(draws, { draw: '0 0' }); ctx.set(leaderDraws, { draw: '0 0' });
     ctx.set(texts, { opacity: 0 }); ctx.set(pts, { scale: 0 });
@@ -61,14 +60,16 @@ export default function Idea() {
   });
 
   return (
-    <section className="idea section-light" id="idea" data-theme="light" data-label="02 / The idea">
+    <section className="idea section-light" id="idea" data-theme="light" data-label="Global & local">
       <div className="wrap idea-grid">
         <div className="idea-copy">
-          <p className="eyebrow mono reveal">02 <span className="sep">/</span> The idea</p>
-          <SplitHeading className="display" text="Mobility is global. Winning is local." />
+          <p className="eyebrow reveal">02 <span className="sep">/</span> Global technology. Local business.</p>
+          <SplitHeading className="display" lines={[{ text: 'Mobility is global.', tone: 'muted' }, { text: 'Winning is local.' }]} />
           <div className="idea-support">
-            <p className="idea-trio reveal-stagger"><span>Your brand.</span> <span>Your market.</span> <span>Your customers.</span></p>
-            <p className="lede reveal">AGEX provides the technology infrastructure behind the operation.</p>
+            <p className="statement reveal-stagger"><span>Your brand.</span> <span>Your market.</span> <span>Our engine.</span></p>
+            <p className="lede reveal">
+              AGEX provides the technology to launch and operate mobility businesses under your own brand. You focus on your market and customers. We power the rest.
+            </p>
           </div>
         </div>
         <div className="idea-visual">

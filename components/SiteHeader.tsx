@@ -5,36 +5,32 @@ import { useEffect, useRef, useState } from 'react';
 import { animate, stagger } from 'animejs';
 import { Logo } from '@/components/LogoSprite';
 import { $$, prefersReducedMotion, subscribeScroll } from '@/lib/motion';
+import { NAV, type NavKey } from '@/lib/site';
 
 type Props = {
-  /** Home page: header theme follows sections, nav highlights the current section, intro animation. */
+  /** Home page: plays the intro and highlights the in-view section. */
   home?: boolean;
+  /** Header colour follows the section underneath (pages with alternating light/dark bands). */
+  adaptive?: boolean;
   theme?: 'dark' | 'light';
-  current?: 'contact';
+  current?: NavKey;
   ctaHref?: string;
+  ctaLabel?: string;
 };
 
-const NAV = [
-  { id: 'engine', label: 'Engine' },
-  { id: 'solutions', label: 'Solutions' },
-  { id: 'deployments', label: 'Deployments' },
-  { id: 'about', label: 'About' },
-];
-// Sections that map onto a nav item
-const SECTION_NAV: Record<string, string> = { engine: 'engine', layers: 'engine', solutions: 'solutions', deployments: 'deployments', about: 'about' };
+// Home sections that map onto a nav item
+const SECTION_NAV: Record<string, NavKey> = { engine: 'engine', layers: 'engine', platform: 'engine', solutions: 'solutions' };
 
-export default function SiteHeader({ home = false, theme = 'dark', current, ctaHref = '/contact' }: Props) {
+export default function SiteHeader({ home = false, adaptive = home, theme = 'dark', current, ctaHref = '/contact', ctaLabel = 'Start your mobility business' }: Props) {
   const headerRef = useRef<HTMLElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
-  const [active, setActive] = useState<string | null>(null);
-  const base = home ? '' : '/';
+  const [active, setActive] = useState<NavKey | null>(current ?? null);
 
-  // Theme + scrolled state + current nav item (home only)
   useEffect(() => {
     const header = headerRef.current;
-    if (!home || !header) return;
+    if (!adaptive || !header) return;
     const themed = $$('main > section[data-theme], .site-footer');
     return subscribeScroll(() => {
       const hh = header.offsetHeight / 2;
@@ -43,11 +39,10 @@ export default function SiteHeader({ home = false, theme = 'dark', current, ctaH
       if (!cur) return;
       header.dataset.theme = cur.dataset.theme || 'dark';
       header.classList.toggle('is-scrolled', window.scrollY > 12);
-      setActive(SECTION_NAV[cur.id] ?? null);
+      if (home) setActive(SECTION_NAV[cur.id] ?? null);
     });
-  }, [home]);
+  }, [adaptive, home]);
 
-  // Mobile menu side effects
   useEffect(() => {
     document.body.classList.toggle('menu-open', open);
     if (open && menuRef.current && !prefersReducedMotion()) {
@@ -63,12 +58,13 @@ export default function SiteHeader({ home = false, theme = 'dark', current, ctaH
   useEffect(() => () => document.body.classList.remove('menu-open'), []);
 
   const close = () => setOpen(false);
+  const href = (h: string) => (home && h.startsWith('/#') ? h.slice(1) : h);
 
   return (
     <>
       <header
         ref={headerRef}
-        className={`site-header${home ? '' : ' is-scrolled'}`}
+        className={`site-header${adaptive ? '' : ' is-scrolled'}`}
         data-theme={theme}
         {...(home ? { 'data-intro-header': '' } : {})}
       >
@@ -77,16 +73,13 @@ export default function SiteHeader({ home = false, theme = 'dark', current, ctaH
         </Link>
         <nav className="nav" aria-label="Primary">
           {NAV.map(n => (
-            <a key={n.id} href={`${base}#${n.id}`} className={active === n.id ? 'is-current' : undefined}>
+            <Link key={n.key} href={href(n.href)} className={active === n.key ? 'is-current' : undefined} aria-current={current === n.key ? 'page' : undefined}>
               <span className="nav-dot" />{n.label}
-            </a>
+            </Link>
           ))}
-          <Link href="/contact" className={current === 'contact' ? 'is-current' : undefined} aria-current={current === 'contact' ? 'page' : undefined}>
-            <span className="nav-dot" />Contact
-          </Link>
         </nav>
         <Link className="btn btn-outline nav-cta" href={ctaHref}>
-          <span className="cta-long">Start your mobility business</span><span className="cta-short">Start</span>
+          <span className="cta-long">{ctaLabel}</span><span className="cta-short">Start</span>
         </Link>
         <button ref={btnRef} className="menu-toggle" type="button" aria-expanded={open} aria-controls="mobile-menu" onClick={() => setOpen(o => !o)}>
           <span className="sr-only">{open ? 'Close menu' : 'Open menu'}</span>
@@ -97,11 +90,10 @@ export default function SiteHeader({ home = false, theme = 'dark', current, ctaH
       <div ref={menuRef} className="mobile-menu" id="mobile-menu" hidden={!open}>
         <nav aria-label="Mobile">
           {NAV.map((n, i) => (
-            <a key={n.id} href={`${base}#${n.id}`} onClick={close}><span className="mono">0{i + 1}</span>{n.label}</a>
+            <Link key={n.key} href={href(n.href)} onClick={close}><span className="label">0{i + 1}</span>{n.label}</Link>
           ))}
-          <Link href="/contact" onClick={close}><span className="mono">05</span>Contact</Link>
         </nav>
-        <Link className="btn btn-solid" href={ctaHref} onClick={close}>Start your mobility business <span aria-hidden="true">→</span></Link>
+        <Link className="btn btn-solid" href={ctaHref} onClick={close}>{ctaLabel} <span aria-hidden="true">→</span></Link>
       </div>
     </>
   );

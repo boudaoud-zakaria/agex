@@ -1,10 +1,12 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import { stagger, svg } from 'animejs';
 import { $$, useAnime } from '@/lib/motion';
 
-/** Scroll reveals shared by all home sections: word rises, fades, card groups, icon line-draws, counters. */
+/** Site-wide scroll reveals (word rises, fades, card groups, icon line-draws, counters). Re-binds on every route change. */
 export default function Reveals() {
+  const pathname = usePathname();
   useAnime(ctx => {
     const counters = $$('[data-count]');
     const countUp = (el: Element) => {
@@ -15,16 +17,16 @@ export default function Reveals() {
     };
     if (ctx.reduce) { counters.forEach(countUp); return; }
 
-    $$('main [data-split]').forEach(h => {
-      if (h.closest('.hero')) return; // hero runs its own intro
+    $$('[data-split]').forEach(h => {
+      if (h.closest('[data-own-intro]')) return; // sections with their own intro
       ctx.onEnter(h, () => ctx.animate($$('.w > span', h), { translateY: ['108%', '0%'], duration: 1000, delay: stagger(55), ease: 'outExpo' }), 0.3);
     });
-    $$('main .reveal').forEach(e => ctx.onEnter(e, () => ctx.animate(e, { opacity: [0, 1], translateY: [24, 0], duration: 900, ease: 'outExpo' })));
-    $$('main .reveal-stagger').forEach(e => ctx.onEnter(e, () => ctx.animate(e.children, { opacity: [0, 1], translateY: [14, 0], duration: 700, delay: stagger(90), ease: 'outExpo' })));
+    $$('.reveal').forEach(e => ctx.onEnter(e, () => ctx.animate(e, { opacity: [0, 1], translateY: [24, 0], duration: 900, ease: 'outExpo' })));
+    $$('.reveal-stagger').forEach(e => ctx.onEnter(e, () => ctx.animate(e.children, { opacity: [0, 1], translateY: [14, 0], duration: 700, delay: stagger(90), ease: 'outExpo' })));
 
     const iconStrokes = $$('.sol-icon .draw:not(.dash)');
     if (iconStrokes.length) ctx.set(svg.createDrawable(iconStrokes), { draw: '0 0' });
-    const parents = new Set($$('main .reveal-card').map(c => c.parentElement!));
+    const parents = new Set($$('.reveal-card').map(c => c.parentElement!));
     parents.forEach(p => ctx.onEnter(p, () => {
       ctx.animate($$(':scope > .reveal-card', p), { opacity: [0, 1], translateY: [24, 0], duration: 900, delay: stagger(110), ease: 'outExpo' });
       const icons = $$('.sol-icon .draw:not(.dash)', p);
@@ -35,6 +37,6 @@ export default function Reveals() {
     }, 0.12));
 
     counters.forEach(e => ctx.onEnter(e, countUp, 0.5));
-  });
+  }, [pathname]);
   return null;
 }

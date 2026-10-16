@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Figtree, JetBrains_Mono } from 'next/font/google';
 import LogoSprite from '@/components/LogoSprite';
 import ReadyFlag from '@/components/ReadyFlag';
+import Reveals from '@/components/Reveals';
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from '@/lib/site';
 import './globals.css';
 
@@ -38,6 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <LogoSprite />
         <a className="skip-link" href="#main">Skip to content</a>
         {children}
+        <Reveals />
         <ReadyFlag />
       </body>
     </html>

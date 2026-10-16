@@ -34,10 +34,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: 'Too many requests. Please try again later.' }, { status: 429 });
   }
 
-  let body: Partial<Inquiry>;
+  let body: Inquiry;
   try {
     body = await req.json();
   } catch {
+    return NextResponse.json({ ok: false, error: 'Invalid request.' }, { status: 400 });
+  }
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
     return NextResponse.json({ ok: false, error: 'Invalid request.' }, { status: 400 });
   }
 
@@ -47,18 +50,19 @@ export async function POST(req: Request) {
   const errors = validateInquiry(body);
   if (Object.keys(errors).length) return NextResponse.json({ ok: false, errors }, { status: 422 });
 
-  const clean = (v: unknown) => (typeof v === 'string' ? v.trim() : undefined);
+  const clean = (v: unknown) => (typeof v === 'string' && v.trim() ? v.trim() : null);
+  const kind = body.kind === 'investor' ? 'investor' : 'customer';
   const inquiry = {
+    kind,
     name: clean(body.name),
     email: clean(body.email),
-    company: clean(body.company) || null,
-    market: clean(body.market),
-    building: clean(body.building) || null,
-    stage: clean(body.stage) || null,
-    message: clean(body.message) || null,
-    investor: body.investor === true,
+    ...(kind === 'customer'
+      ? { company: clean(body.company), building: clean(body.building), stage: clean(body.stage) }
+      : { organization: clean(body.organization), interest: clean(body.interest), source: clean(body.source) }),
+    country: clean(body.country),
+    message: clean(body.message),
     consent: true,
-    inquiry_type: inquiryType(body),
+    inquiry_type: inquiryType({ ...body, kind }),
     received_at: new Date().toISOString(),
   };
 
@@ -85,7 +89,7 @@ export async function POST(req: Request) {
   }
 
   // Routing metadata only in logs (no personal data)
-  console.info(`[contact] inquiry type=${inquiry.inquiry_type} market=${inquiry.market} stored=${stored} webhook=${hook ? delivered : 'not-configured'}`);
+  console.info(`[contact] inquiry type=${inquiry.inquiry_type} country=${inquiry.country} stored=${stored} webhook=${hook ? delivered : 'not-configured'}`);
 
   if (!stored && !delivered) {
     return NextResponse.json({ ok: false, error: 'We couldn’t send your inquiry. Please try again in a moment.' }, { status: 502 });
