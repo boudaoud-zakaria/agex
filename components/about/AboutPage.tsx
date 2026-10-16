@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Icon from '@/components/Icon';
 import SplitHeading from '@/components/SplitHeading';
 import AboutEngine from '@/components/visuals/AboutEngine';
@@ -86,6 +87,17 @@ export default function AboutPage() {
               </ul>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="ab-partners section-light alt" data-theme="light" data-label="Investors & strategic partners">
+        <div className="wrap ab-partners-inner">
+          <div>
+            <p className="eyebrow reveal">Investors &amp; strategic partners</p>
+            <SplitHeading className="ab-partners-title" text="Interested in the future of mobility?" />
+            <p className="ab-partners-sub reveal">Explore investment and strategic partnership opportunities with AGEX TECH.</p>
+          </div>
+          <Link className="btn btn-outline-dark btn-lg reveal" href="/contact/investors">Connect with AGEX <span aria-hidden="true">→</span></Link>
         </div>
       </section>
     </>

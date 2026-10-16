@@ -763,6 +763,13 @@ body.menu-open .site-header { color: var(--fg-dark); background: transparent; bo
 .ab-col li span span { display: block; color: var(--muted); font-size: 15.5px; margin-top: 2px; }
 .ab-row-ico { justify-self: center; color: var(--fg); }
 .ab-col.is-agex { background: var(--black); color: var(--fg-dark); border-color: var(--black); --line: var(--line-dark); --muted: var(--muted-dark); --fg: var(--fg-dark); }
+.ab-partners { padding: clamp(40px, 5vw, 64px) 0; border-top: 1px solid var(--line-light); border-bottom: 1px solid var(--line-light); }
+.ab-partners-inner { display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+.ab-partners .eyebrow { margin-bottom: 14px; }
+.ab-partners-title { font-size: clamp(30px, 3.2vw, 46px); font-weight: 600; letter-spacing: -.02em; line-height: 1.1; }
+.ab-partners-sub { margin-top: 10px; color: var(--muted-light); font-size: clamp(17px, 1.4vw, 19px); }
+.btn-outline-dark { border: 1px solid var(--ink); color: var(--ink); background: transparent; }
+.btn-outline-dark:hover { background: var(--ink); color: var(--white); }
 .ab-row-box { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 12px; border: 1px solid var(--line-dark); background: var(--char-2); color: var(--gold); filter: drop-shadow(0 0 6px rgba(214,163,74,.25)); }
 
 /* ==========================================================================
