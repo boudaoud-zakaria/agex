@@ -10,10 +10,12 @@ Corporate website for AGEX TECH, the intelligent mobility engine. Built on Next.
 ### Contact form delivery
 Both forms (`/contact`, `/contact/investors`) post to `/api/contact`. Each valid inquiry is:
 1. saved to `data/submissions.jsonl` (`/app/data` volume in Docker);
-2. **emailed to `CONTACT_TO` (investor@agextech.com)** through the Brevo SMTP relay, sent from `SMTP_FROM` (agex@aljazairbuilders.com), with the sender's address as *Reply-To*;
+2. **emailed through the Mailgun API** (domain `agextech.com`, from `MAILGUN_FROM`, the sender's address as *Reply-To*):
+   - `/contact` → `CONTACT_TO_CUSTOMER` (dev@agextech.com)
+   - `/contact/investors` → `CONTACT_TO_INVESTOR` (investor@agextech.com)
 3. optionally forwarded to `CONTACT_WEBHOOK_URL`.
 
-SMTP settings live only in `.env` (git-ignored, excluded from the Docker image). On Dokploy, add the same variables in the app's **Environment** tab.
+`MAILGUN_API_KEY` is a Domain Sending Key for agextech.com (it can only send mail for that domain). It lives only in `.env` (git-ignored, excluded from the Docker image). On Dokploy, add the same variables in the app's **Environment** tab.
 
 Copy `.env.example` to `.env` (Docker) or `.env.local` (`npm run dev`) and set:
 - `NEXT_PUBLIC_SITE_URL` (metadata, sitemap, robots)

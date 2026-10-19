@@ -76,7 +76,7 @@ export async function POST(req: Request) {
     console.error('[contact] could not write submission to disk:', err);
   }
 
-  // 2) Email the inquiry (Brevo SMTP → CONTACT_TO, default investor@agextech.com)
+  // 2) Email the inquiry (Mailgun → CONTACT_TO_CUSTOMER / CONTACT_TO_INVESTOR)
   let emailed = false;
   if (mailConfigured()) {
     try {

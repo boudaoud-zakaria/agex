@@ -1,31 +1,16 @@
 /**
- * Contact-form email delivery over SMTP (Brevo relay). Server-only: import from route handlers.
- * Configure via environment (see .env.example): SMTP_HOST, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD,
- * SMTP_FROM, SMTP_USE_TLS, CONTACT_TO.
+ * Contact-form email delivery through the Mailgun HTTP API. Server-only: import from route handlers.
+ * Configure via environment (see .env.example): MAILGUN_API_KEY (domain sending key), MAILGUN_DOMAIN,
+ * MAILGUN_FROM, MAILGUN_API_BASE, CONTACT_TO_CUSTOMER, CONTACT_TO_INVESTOR.
  */
-import nodemailer, { type Transporter } from 'nodemailer';
-
 type Record_ = Record<string, unknown>;
-let transporter: Transporter | null = null;
 
 const env = (k: string) => (process.env[k] ?? '').trim();
-export const mailConfigured = () => Boolean(env('SMTP_HOST') && env('SMTP_USERNAME') && env('SMTP_PASSWORD') && env('SMTP_FROM'));
+export const mailConfigured = () => Boolean(env('MAILGUN_API_KEY') && env('MAILGUN_DOMAIN'));
 
-function getTransport() {
-  if (transporter) return transporter;
-  const port = Number(env('SMTP_PORT') || 587);
-  transporter = nodemailer.createTransport({
-    host: env('SMTP_HOST'),
-    port,
-    secure: port === 465, // implicit TLS on 465; STARTTLS otherwise
-    requireTLS: port !== 465 && env('SMTP_USE_TLS').toLowerCase() !== 'false',
-    auth: { user: env('SMTP_USERNAME'), pass: env('SMTP_PASSWORD') },
-    connectionTimeout: 15000,
-    greetingTimeout: 10000,
-    socketTimeout: 20000,
-  });
-  return transporter;
-}
+/** /contact goes to the business team, /contact/investors to investor relations. */
+const recipient = (investor: boolean) =>
+  investor ? env('CONTACT_TO_INVESTOR') || 'investor@agextech.com' : env('CONTACT_TO_CUSTOMER') || 'dev@agextech.com';
 
 const esc = (v: unknown) => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
 const oneLine = (v: unknown) => String(v ?? '').replace(/[\r\n]+/g, ' ').slice(0, 140);
@@ -59,15 +44,26 @@ export async function sendInquiryEmail(inq: Record_) {
     <tr><td style="padding:0 26px 22px;color:#8b8984;font-size:13px">Reply to this email to answer ${esc(inq.name)} directly.</td></tr>
   </table></body></html>`;
 
-  return getTransport().sendMail({
-    from: { name: 'AGEX Website', address: env('SMTP_FROM') },
-    to: env('CONTACT_TO') || 'investor@agextech.com',
-    replyTo: typeof inq.email === 'string' ? { name: oneLine(inq.name), address: inq.email } : undefined,
+  const form = new URLSearchParams({
+    from: env('MAILGUN_FROM') || `AGEX Website <postmaster@${env('MAILGUN_DOMAIN')}>`,
+    to: recipient(investor),
     subject,
     text,
     html,
+    'o:tag': investor ? 'investor-inquiry' : 'customer-inquiry',
   });
-}
+  // Reply goes straight to the sender (plain addresses only, nothing that could bend the header)
+  if (typeof inq.email === 'string' && /^[^\s@<>",;]+@[^\s@<>",;]+$/.test(inq.email)) {
+    form.set('h:Reply-To', `"${oneLine(inq.name).replace(/["\\<>]/g, '')}" <${inq.email}>`);
+  }
 
-/** Connection + authentication check without sending anything. */
-export const verifyMail = () => getTransport().verify();
+  const base = (env('MAILGUN_API_BASE') || 'https://api.mailgun.net').replace(/\/$/, '');
+  const res = await fetch(`${base}/v3/${encodeURIComponent(env('MAILGUN_DOMAIN'))}/messages`, {
+    method: 'POST',
+    headers: { Authorization: `Basic ${Buffer.from(`api:${env('MAILGUN_API_KEY')}`).toString('base64')}` },
+    body: form,
+    signal: AbortSignal.timeout(15000),
+  });
+  if (!res.ok) throw new Error(`Mailgun ${res.status}: ${(await res.text()).slice(0, 300)}`);
+  return (await res.json()) as { id?: string; message?: string };
+}
